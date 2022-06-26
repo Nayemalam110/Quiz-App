@@ -18,27 +18,38 @@ class QuizAppState extends State<QuizApp> {
   var questions = [
     {
       'questiontext': 'What is your favorite color?',
-      'options': ['Red', 'Green', 'White'],
+      'options': [
+        {'optionsname': 'Red', 'optionsvalue': 1},
+        {'optionsname': 'Blue', 'optionsvalue': 2},
+        {'optionsname': 'Green', 'optionsvalue': 3},
+      ],
     },
     {
       'questiontext': 'What is your favorite sport?',
-      'options': ['Cricket', 'Football', 'hokey'],
+      'options': [
+        {'optionsname': 'hokey', 'optionsvalue': 4},
+        {'optionsname': 'Football', 'optionsvalue': 5},
+        {'optionsname': 'Cricket', 'optionsvalue': 6},
+      ],
     },
     {
       'questiontext': 'When is your favorite time to work?',
-      'options': ['Morning', 'Afternoon', 'Evening'],
+      'options': [
+        {'optionsname': 'Morning', 'optionsvalue': 7},
+        {'optionsname': 'Afternoon', 'optionsvalue': 8},
+        {'optionsname': 'Evening', 'optionsvalue': 9},
+      ],
     },
   ];
 
-  var _index = 0;
+  int _index = 0;
+  int score = 0;
 
-  void changeindex() {
+  void _changeindex(int source) {
+    score = score + source;
     setState(() {
       _index = _index + 1;
     });
-    if (_index == 2) {
-      _index = 0;
-    }
   }
 
   @override
@@ -49,16 +60,23 @@ class QuizAppState extends State<QuizApp> {
           appBar: AppBar(
             title: Text('Quiz App'),
           ),
-          body: Column(
-            children: [
-              Quest(
-                questions[_index]['questiontext'] as String,
-              ),
-              ...(questions[_index]['options'] as List<String>).map((answer) {
-                return Answer(answer, changeindex);
-              }).toList()
-            ],
-          )),
+          body: _index < questions.length
+              ? Column(
+                  children: [
+                    Quest(
+                      questions[_index]['questiontext'] as String,
+                    ),
+                    ...(questions[_index]['options']
+                            as List<Map<String, Object>>)
+                        .map((answer) {
+                      return Answer(answer['optionsname'] as String,
+                          () => _changeindex(answer['optionsvalue'] as int));
+                    }).toList()
+                  ],
+                )
+              : Center(
+                  child: Text('Your score is $score'),
+                )),
     );
   }
 }
