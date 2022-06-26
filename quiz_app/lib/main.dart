@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/answer.dart';
 import 'package:quiz_app/question.dart';
+import 'package:quiz_app/quiz.dart';
+import 'package:quiz_app/result.dart';
 
 void main() {
   runApp(QuizApp());
@@ -56,27 +58,14 @@ class QuizAppState extends State<QuizApp> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           appBar: AppBar(
             title: Text('Quiz App'),
           ),
           body: _index < questions.length
-              ? Column(
-                  children: [
-                    Quest(
-                      questions[_index]['questiontext'] as String,
-                    ),
-                    ...(questions[_index]['options']
-                            as List<Map<String, Object>>)
-                        .map((answer) {
-                      return Answer(answer['optionsname'] as String,
-                          () => _changeindex(answer['optionsvalue'] as int));
-                    }).toList()
-                  ],
-                )
-              : Center(
-                  child: Text('Your score is $score'),
-                )),
+              ? Quiz(questions = questions, _index, _changeindex)
+              : Result(score)),
     );
   }
 }
